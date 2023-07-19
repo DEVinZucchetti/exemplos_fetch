@@ -1,26 +1,35 @@
-var cepForm = document.getElementById('cepForm');
 
-cepForm.addEventListener('submit', function (event) {
-    event.preventDefault();
 
-    var cepInput = document.getElementById('cep');
-    var cep = cepInput.value.replace(/\D/g, '');
+document.getElementById("cepForm").addEventListener('submit', exibirDados)
 
-    if (cep.length === 8) {
-        fetch('https://viacep.com.br/ws/' + cep + '/json/')
-            .then(response => response.json())
+function exibirDados(event) {
+    event.preventDefault()
+
+    const cep = document.getElementById('cep').value
+
+    // URL -> viabrasil.com.br/ws/01001000/json/
+
+    if (cep.length === 8 || cep.length === 9) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`) // GET
+            .then((response) => response.json())
             .then((data) => {
-
-                var resultDiv = document.getElementById('result');
-                resultDiv.innerHTML = '<strong>Endereço:</strong> ' + data.logradouro + '<br>' +
-                    '<strong>Bairro:</strong> ' + data.bairro + '<br>' +
-                    '<strong>Cidade:</strong> ' + data.localidade + '<br>' +
-                    '<strong>Estado:</strong> ' + data.uf + '<br>';
+                
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+            <p>Endereço: ${data.logradouro}</p>
+            <p>Bairro: ${data.bairro}</p>
+            <p>Cidade: ${data.localidade}</p>
+            <p>UF: ${data.uf}</p>
+            <p>DDD: ${data.ddd}</p>
+        `
             })
-            .catch((error) => {
-                alert('Erro ao realizar a pesquisa: ' + error.message);
-            });
+            .catch(() => {
+                alert("ERRO AO FAZER A SOLICITACAO")
+            })
     } else {
-        alert('CEP inválido.');
+        alert('Digitado o cep completo')
     }
-});
+    // fetch('https://viacep.com.br/ws/' + cep + '/json/')
+
+}
+
